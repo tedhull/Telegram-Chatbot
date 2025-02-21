@@ -16,7 +16,7 @@ class LLM extends Controller
         return LLM::generationToResponse($json);
     }
 
-    public static function chat(string $prompt, mixed $chatHistory, bool $stream = false): string
+    public static function chat(mixed $chatHistory, bool $stream = false): string
     {
         $json = Http::post('http://localhost:11434/api/chat', [
                 'model' => env('LLM_MODEL'),
