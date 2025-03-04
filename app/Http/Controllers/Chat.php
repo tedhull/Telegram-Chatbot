@@ -6,9 +6,9 @@ class Chat extends Controller
 {
     public static function chat($chatId, $prompt)
     {
-        $history = Conversation::addMessage('user', $prompt, $chatId);
+        $history = ConversationController::addMessage('user', $prompt, $chatId);
         $response = LLM::chat( $history);
-        Conversation::addMessage('assistant', $response, $chatId);
+        ConversationController::addMessage('assistant', $response, $chatId);
         return $response;
     }
 }

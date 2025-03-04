@@ -6,19 +6,20 @@ use App\Models\Conversation;
 use Database\Factories\ConversationFactory;
 use Illuminate\Support\Facades\DB;
 
-class Conversation extends Controller
+class ConversationController extends Controller
 {
     public static function addMessage($role, $body, $chat_id)
     {
         $message = ['role' => $role, 'content' => $body];
+
         $history = self::history($chat_id);
         $history [] = $message;
-        var_dump($history);
+
         DB::table('conversations')->where('id', $chat_id)->update(['body' => json_encode($history)]);
-        Cache::updateHistory($chat_id);
+        Cache::setHash($chat_id,env('CHAT_HASH_NAME'),'history',$history);
+
         return $history;
     }
-
 
 
     public static function history($chatId, bool $searchInDB = false)
@@ -41,7 +42,7 @@ class Conversation extends Controller
 
     private static function historyFromCache($chatId)
     {
-        $result = Cache::getHistory($chatId);
+        $result = Cache::getHash($chatId,env('CHAT_HASH_NAME'),'history');
         if ($result === null) {
             $result = self::historyFromDB($chatId);
         }
