@@ -16,7 +16,7 @@ class ConversationController extends Controller
         $history [] = $message;
 
         DB::table('conversations')->where('id', $chat_id)->update(['body' => json_encode($history)]);
-        Cache::setHash($chat_id,env('CHAT_HASH_NAME'),'history',$history);
+        Cache::setHash($chat_id, env('CHAT_HASH_NAME'), 'history', $history);
 
         return $history;
     }
@@ -42,7 +42,7 @@ class ConversationController extends Controller
 
     private static function historyFromCache($chatId)
     {
-        $result = Cache::getHash($chatId,env('CHAT_HASH_NAME'),'history');
+        $result = Cache::getHash($chatId, env('CHAT_HASH_NAME'), 'history');
         if ($result === null) {
             $result = self::historyFromDB($chatId);
         }
@@ -51,6 +51,10 @@ class ConversationController extends Controller
 
     static function createConversation($id)
     {
-        return ConversationFactory::new()->custom($id, json_encode([]))->create();
+        $model = env('LLM_MODEL');
+        var_dump($model);
+        $conversation = ConversationFactory::new()->custom($id, json_encode([]),$model)->create();
+        Cache::setHash($id, env('CHAT_HASH_NAME'), 'model', $model);
+        return $conversation;
     }
 }

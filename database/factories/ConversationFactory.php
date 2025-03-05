@@ -21,11 +21,12 @@ class ConversationFactory extends Factory
         ];
     }
 
-    public function custom($id, $body = null): static
+    public function custom($id, $body = null, $model): static
     {
         return $this->state([
             'id' => $id,
             'body' => $body,
+            'model' =>$model,
         ]);
     }
 }

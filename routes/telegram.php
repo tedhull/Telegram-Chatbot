@@ -19,5 +19,17 @@ $bot->onCommand('cache', function (Nutgram $bot) {
     $bot->sendMessage($response);
 });
 
-//$bot->sendMessage(text: 'started', chat_id: env('LOG_CHAT_ID'));
-//$bot->run();
+$bot->onCommand('model {parameter}', function (Nutgram $bot, $parameter) {
+    $response = Commands::model($bot->chatId(), $parameter);
+    $bot->sendMessage($response);
+});
+
+$bot->onCommand('models', function (Nutgram $bot) {
+    $models = Commands::models();
+    foreach ($models as $model) {
+        $bot->sendMessage($model);
+    }
+});
+
+$bot->sendMessage(text: 'started', chat_id: env('LOG_CHAT_ID'));
+$bot->run();
