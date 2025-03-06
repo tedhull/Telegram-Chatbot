@@ -10,15 +10,19 @@ class Cache extends Controller
 {
     public static function updateHistory($chatId)
     {
-        $key = 'chat:' . $chatId;
-        $data = Conversation::history($chatId, true);
-        Redis::command("set", [$key, json_encode($data)]);
+        $data = ConversationController::history($chatId, true);
+        self::setHash($chatId,env('CHAT_HASH_NAME'),'history',$data);
     }
 
-    public static function getHistory($chatId)
+    public static function setHash($id, $name, $key, $value)
     {
-        $key = 'chat:' . $chatId;
-        $data = Redis::command('get', [$key]);
-        return json_decode($data, true);
+        $hashName = $name . ':' . $id;
+        Redis::command('hset', [$hashName, $key, json_encode($value)]);
+    }
+
+    public static function getHash($id, $name, $key)
+    {
+        $hashName = $name . ':' . $id;
+        return json_decode(Redis::command('hget', [$hashName, $key]));
     }
 }

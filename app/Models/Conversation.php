@@ -11,5 +11,5 @@ class Conversation extends Model
     use HasFactory;
 
     protected $table = 'conversations';
-    protected $fillable = ['id','body'];
+    protected $fillable = ['id','body','model'];
 }
