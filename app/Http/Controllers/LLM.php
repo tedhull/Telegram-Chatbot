@@ -11,7 +11,7 @@ class LLM extends Controller
 {
     public static function generate(string $prompt, bool $stream = false): string
     {
-        $json = Http::post('http://localhost:11434/api/generate', [
+        $json = Http::post(env('OLLAMA_ADDRESS') . '/api/generate', [
             'model' => env('LLM_MODEL'),
             'prompt' => $prompt,
             'stream' => $stream,
@@ -25,7 +25,7 @@ class LLM extends Controller
             $model = env('LLM_MODEL');
         }
         var_dump($model);
-        $json = Http::post('http://localhost:11434/api/chat', [
+        $json = Http::post(env('OLLAMA_ADDRESS') . '/api/chat', [
                 'model' => $model,
                 'messages' => $chatHistory,
                 'stream' => $stream,]
@@ -35,7 +35,7 @@ class LLM extends Controller
 
     public static function models()
     {
-        $json = Http::get('http://localhost:11434/api/tags');
+        $json = Http::get(env('OLLAMA_ADDRESS') . '/api/tags');
 
         return self::list($json);
     }

@@ -1,0 +1,40 @@
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 9000:80
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_DATABASE=telegram_deepseek
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_HOST=mysql
+      - MYSQL_USERNAME=root
+      - MYSQL_ROOT=root
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis/redis-stack-server:latest
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
+volumes:
+  mysql-data:
+  redis-data:

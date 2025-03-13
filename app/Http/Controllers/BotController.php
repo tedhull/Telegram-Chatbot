@@ -1,5 +1,5 @@
 <?php
-/*
+
 use App\Http\Controllers\Commands;
 use SergiX44\Nutgram\Nutgram;
 use App\Http\Controllers\Chat;
@@ -31,4 +31,5 @@ $bot->onCommand('models', function (Nutgram $bot) {
     }
 });
 
-*/
+$bot->sendMessage(text: 'started', chat_id: env('LOG_CHAT_ID'));
+$bot->run();
