@@ -7,22 +7,25 @@ services:
     env_file:
       - .env
     depends_on:
-      - mariadb
+      - mysql
       - redis
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
-  mariadb:
-    image: mariadb:latest
+  mysql:
+    image: mysql:5.7
     restart: always
     environment:
-      - MARIADB_DATABASE=myapp
-      - MARIADB_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=telegram_deepseek
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_HOST=mysql
+      - MYSQL_USERNAME=root
+      - MYSQL_ROOT=root
     ports:
       - 3306:3306
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
 
   redis:
     image: redis/redis-stack-server:latest
@@ -33,5 +36,5 @@ services:
       - redis-data:/data
 
 volumes:
-  mariadb-data:
+  mysql-data:
   redis-data:
