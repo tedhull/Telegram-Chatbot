@@ -30,14 +30,13 @@ class ConversationController extends Controller
 
     private static function historyFromDB($chatId)
     {
-        $conversation = Conversation::find($chatId);
-
-        if ($conversation === null) {
+        try {
+            $conversation = Conversation::find($chatId);
+            return json_decode($conversation->body, true);
+        } catch (\Exception $e) {
             self::createConversation($chatId);
             return [];
         }
-        $conversation = Conversation::find($chatId);
-        return json_decode($conversation->body, true);
     }
 
     private static function historyFromCache($chatId)
@@ -53,7 +52,7 @@ class ConversationController extends Controller
     {
         $model = env('LLM_MODEL');
         var_dump($model);
-        $conversation = ConversationFactory::new()->custom($id, json_encode([]),$model)->create();
+        $conversation = ConversationFactory::new()->custom($id, json_encode([]), $model)->create();
         Cache::setHash($id, env('CHAT_HASH_NAME'), 'model', $model);
         return $conversation;
     }

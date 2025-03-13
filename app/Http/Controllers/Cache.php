@@ -11,18 +11,23 @@ class Cache extends Controller
     public static function updateHistory($chatId)
     {
         $data = ConversationController::history($chatId, true);
-        self::setHash($chatId,env('CHAT_HASH_NAME'),'history',$data);
+        self::setHash($chatId, env('CHAT_HASH_NAME'), 'history', $data);
     }
 
     public static function setHash($id, $name, $key, $value)
     {
+        $redis = new \Redis();
+        $redis->connect(env('REDIS_HOST'), env('REDIS_PORT'));
         $hashName = $name . ':' . $id;
-        Redis::command('hset', [$hashName, $key, json_encode($value)]);
+        $redis->hSet($hashName, $key, json_encode($value));
     }
 
     public static function getHash($id, $name, $key)
     {
+
+        $redis = new \Redis();
+        $redis->connect(env('REDIS_HOST'), env('REDIS_PORT'));
         $hashName = $name . ':' . $id;
-        return json_decode(Redis::command('hget', [$hashName, $key]));
+        return json_decode($redis->hGet($hashName, $key), true);
     }
 }
